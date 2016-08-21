@@ -3,12 +3,12 @@ var express = require('express');
 var router = express.Router();
 //用户注册
 router.get('/reg', function(req, res, next) {
-  res.send('注册');
+  res.render('user/reg');
 });
 //不是完整的路径，而是/users后面的路径
 //用户登陆
 router.get('/login', function(req, res, next) {
-  res.send('登陆');
+  res.render('user/login');
 });
 //用户退出
 router.get('/logout', function(req, res, next) {
