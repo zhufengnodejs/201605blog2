@@ -1,6 +1,5 @@
 //用于用打印一些调试信息
-var debug = require('debug');
-console.log(process.env.DEBUG);
+var debug = require('./debug');
 //传入一个名字可以得到对应的日志记录器
 var loggerServer = debug('logger:server');
 //调用此函数在控制台输出日志
