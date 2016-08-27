@@ -38,6 +38,32 @@ router.post('/reg', function(req, res, next) {
 router.get('/login', function(req, res, next) {
   res.render('user/login');
 });
+//处理提交登录功能
+router.post('/login', function(req, res, next) {
+  var user = req.body;//先获取请求体 user ={username,password}
+  Model('User').findOne({username:user.username},function(err,doc){
+      if(err){
+        req.flash('error','登录失败');
+        res.redirect('back');
+      }else{
+        if(doc){//意味着有此用户名的用户
+          //判断数据库中的用户密码和本次输入的密码是否一致
+          if(doc.password == utils.md5(user.password)){
+            req.session.user  = doc;
+            //重定向到首页
+            return res.redirect('/');
+          }else{
+            req.flash('error','密码输入错误,请重新输入');
+            res.redirect('back');
+          }
+        }else{
+          req.flash('error','此用户名不存在');
+          res.redirect('back');
+        }
+      }
+  });
+});
+
 router.get('/logout',function(req,res){
    req.session.user = null;
    res.redirect('/');
