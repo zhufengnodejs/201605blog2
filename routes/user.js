@@ -38,6 +38,10 @@ router.post('/reg', function(req, res, next) {
 router.get('/login', function(req, res, next) {
   res.render('user/login');
 });
+router.get('/logout',function(req,res){
+   req.session.user = null;
+   res.redirect('/');
+})
 
 //用户退出
 router.get('/logout', function(req, res, next) {

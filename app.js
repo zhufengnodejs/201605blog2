@@ -48,10 +48,14 @@ app.use(session({
 app.use(flash());
 //用来将flash消息赋给模板数据对象
 app.use(function(req,res,next){
+  //res.locals是express提供的，真正用来渲染模板的数据对象
   //取出成功的消息赋给success属性
   res.locals.success = req.flash('success').toString();
   //取出失败的消息赋给error属性
   res.locals.error = req.flash('error').toString();
+  //把session中的user属性赋给模板数据对象的user属性
+  //如果已登陆，则 req.session.user有值，如果未登陆，则 req.session.user没有值
+  res.locals.user = req.session.user;
   next();
 });
 //静态文件中间件 根目录是public目录,所以在页面中引用静态文件的时候必须以public目录作为根目录
