@@ -2,6 +2,16 @@ var express = require('express');
 var auth = require('../middleware/auth');
 //创建一个路由容器
 var router = express.Router();
+//文章列表路由
+router.get('/list',auth.mustLogin,function(req,res){
+   //读取所有的列表并显示在页面中
+   Model('Article').find({}).populate('user').exec(function(err,docs){
+       //docs是所有的文章数组
+       res.render('article/list',{title:'文章列表',articles:docs});
+   });
+});
+
+//显示增加文章的表单路由
 router.get('/add',auth.mustLogin,function(req,res){
     res.render('article/add');
 });
