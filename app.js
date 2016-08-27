@@ -27,7 +27,7 @@ app.use(bodyParser.json());//处理json格式请求体 {name:'zfpx'}
 //如果content-type=application/x-www-form-urlencoded  req.body=querystring.parse(请求体)
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());//处理cookie 得到 req.cookies
-//静态文件中间件
+//静态文件中间件 根目录是public目录,所以在页面中引用静态文件的时候必须以public目录作为根目录
 app.use(express.static(path.join(__dirname, 'public')));
 
 //当路径是/开头的话交由routes处理
