@@ -1,13 +1,15 @@
 var express = require('express');
 var utils = require('../utils');
+var auth = require('../middleware/auth');
 //创建一个路由容器
 var router = express.Router();
 //用户注册
-router.get('/reg', function(req, res, next) {
+//可以在路径和路由之间增加一些中间件函数
+router.get('/reg',auth.mustNotLogin,function(req, res, next) {
   res.render('user/reg');
 });
 //提交用户注册表单
-router.post('/reg', function(req, res, next) {
+router.post('/reg',auth.mustNotLogin, function(req, res, next) {
   var user = req.body;//user password repassword email
   //如果密码和重复密码不一致，则返回重定向到上一个注册表单页面
   if(user.password != user.repassword){
@@ -44,11 +46,11 @@ router.post('/reg', function(req, res, next) {
 });
 //不是完整的路径，而是/users后面的路径
 //用户登陆
-router.get('/login', function(req, res, next) {
+router.get('/login',auth.mustNotLogin, function(req, res, next) {
   res.render('user/login');
 });
 //处理提交登录功能
-router.post('/login', function(req, res, next) {
+router.post('/login',auth.mustNotLogin, function(req, res, next) {
   var user = req.body;//先获取请求体 user ={username,password}
   Model('User').findOne({username:user.username},function(err,doc){
       if(err){
@@ -72,8 +74,8 @@ router.post('/login', function(req, res, next) {
       }
   });
 });
-
-router.get('/logout',function(req,res){
+//必须登陆以后才能退出
+router.get('/logout',auth.mustLogin,function(req,res){
    req.session.user = null;
    res.redirect('/');
 })
