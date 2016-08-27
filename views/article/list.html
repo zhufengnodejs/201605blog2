@@ -1,6 +1,5 @@
 <%include ../include/header.html%>
-<%
-articles.forEach(function(article){%>
+<%articles.forEach(function(article){%>
     <div class="media">
         <div class="media-left">
             <a href="/article/list?user=<%=article.user._id%>">
@@ -9,11 +8,10 @@ articles.forEach(function(article){%>
         </div>
         <div class="media-body">
             <h4 class="media-heading"><%=article.title%></h4>
-            <p><%=article.content%></p>
-            <p>作者:<%=article.user.username%>|发表时间:<%=article.createAt.toLocaleString()%></p>
+            <p><%-article.content%></p>
+            <p>作者:<%=article.user.username%> | 发表时间:<%=article.createAt.toLocaleString()%></p>
         </div>
     </div>
-<%});
-%>
+<%});%>
 
 <%include ../include/footer.html%>

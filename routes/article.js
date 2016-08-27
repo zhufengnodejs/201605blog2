@@ -1,5 +1,6 @@
 var express = require('express');
 var auth = require('../middleware/auth');
+var markdown = require('markdown').markdown;
 //创建一个路由容器
 var router = express.Router();
 //文章列表路由
@@ -10,8 +11,18 @@ router.get('/list',auth.mustLogin,function(req,res){
     if(user)
         query['user'] = user;
    Model('Article').find(query).populate('user').exec(function(err,docs){
-       //docs是所有的文章数组
-       res.render('article/list',{title:'文章列表',articles:docs});
+       if(err){
+           req.flash('error','显示文章列表失败'+err);
+           res.redirect('back');
+       }else{
+           //把markdown源文件转换成html格式的内容
+           docs.forEach(function(doc){
+               doc.content = markdown.toHTML(doc.content);
+           });
+           //docs是所有的文章数组
+           res.render('article/list',{title:'文章列表',articles:docs});
+       }
+
    });
 });
 
