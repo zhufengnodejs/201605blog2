@@ -3,9 +3,10 @@
  * 定义骨架+模型
  */
 var mongoose = require('mongoose');
+var settings= require('../settings');
 var ObjectId = mongoose.Schema.Types.ObjectId;
 //连接数据库  mongodb:/主机名或IP/数据库
-mongoose.connect('mongodb://localhost/201605blog2');
+mongoose.connect(settings.dbUrl);
 //定义模型骨架 定义集合的字段和类型以及约束
 //用户的模型骨架
 var UserSchema = new mongoose.Schema({
