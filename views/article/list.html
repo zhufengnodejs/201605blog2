@@ -3,13 +3,14 @@
 articles.forEach(function(article){%>
     <div class="media">
         <div class="media-left">
-            <a href="#">
+            <a href="/article/list?user=<%=article.user._id%>">
                 <img class="media-object" src="<%=article.user.avatar%>" alt="<%=article.user.username%>">
             </a>
         </div>
         <div class="media-body">
             <h4 class="media-heading"><%=article.title%></h4>
             <p><%=article.content%></p>
+            <p>作者:<%=article.user.username%>|发表时间:<%=article.createAt.toLocaleString()%></p>
         </div>
     </div>
 <%});

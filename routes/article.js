@@ -4,8 +4,12 @@ var auth = require('../middleware/auth');
 var router = express.Router();
 //文章列表路由
 router.get('/list',auth.mustLogin,function(req,res){
+    var user = req.query.user;//取得查询字符串中的用户ID
    //读取所有的列表并显示在页面中
-   Model('Article').find({}).populate('user').exec(function(err,docs){
+    var query = {};//查询条件对象
+    if(user)
+        query['user'] = user;
+   Model('Article').find(query).populate('user').exec(function(err,docs){
        //docs是所有的文章数组
        res.render('article/list',{title:'文章列表',articles:docs});
    });
