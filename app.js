@@ -14,6 +14,7 @@ var bodyParser = require('body-parser');//处理请求体
 var routes = require('./routes/index');
 var user = require('./routes/user');
 var article = require('./routes/article');
+require('./db');
 var app = express();
 
 // view engine setup  设置模板引擎

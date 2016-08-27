@@ -15,7 +15,7 @@ var UserSchema = new mongoose.Schema({
     email: String,    //邮箱
     avatar: String    //头像
 });
-var UserModel = mongoose.model('User',new UserSchema());
+var UserModel = mongoose.model('User',UserSchema);
 //文章的模型骨架
 var ArticleSchema = new mongoose.Schema({
     title: String,  //标题
@@ -24,7 +24,7 @@ var ArticleSchema = new mongoose.Schema({
     createAt: {type: Date, default: Date.now()}//创建时间
 });
 //两个参数表示定会义一个模型，一个参数表示获取一个模型
-var ArticleModel = mongoose.model('Article',new ArticleSchema());
+var ArticleModel = mongoose.model('Article',ArticleSchema);
 //在全局对象上定义一个方法属性，传入一个模型名称，返回此名称对应的模型
 global.Model = function(modelName){
    return mongoose.model(modelName);
