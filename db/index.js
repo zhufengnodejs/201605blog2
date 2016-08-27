@@ -3,6 +3,7 @@
  * 定义骨架+模型
  */
 var mongoose = require('mongoose');
+mongoose.Promise = Promise;
 var settings= require('../settings');
 var ObjectId = mongoose.Schema.Types.ObjectId;
 //连接数据库  mongodb:/主机名或IP/数据库
@@ -29,4 +30,3 @@ var ArticleModel = mongoose.model('Article',ArticleSchema);
 global.Model = function(modelName){
    return mongoose.model(modelName);
 }
-

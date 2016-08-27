@@ -47,4 +47,16 @@ router.post('/add',auth.mustLogin,function(req,res){
         }
     });
 });
+
+router.get('/detail/:articleId',function(req,res){
+  var articleId = req.params.articleId;
+  //find findById findOne等等都返回一个promise对象
+  Model('Article').findById(articleId).then(function(doc){
+      res.render('article/detail',{title:'文章详情',article:doc});
+  }).catch(function(err){
+      req.flash('error','查询文章详情失败');
+      req.redirect('back');
+  });
+});
+
 module.exports = router;
