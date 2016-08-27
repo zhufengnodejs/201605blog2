@@ -1,3 +1,21 @@
 <%include ../include/header.html%>
-注册
+<form action="/user/reg" method="post">
+    <div class="form-group">
+        <label for="username">用户名</label>
+        <input type="text" id="username" class="form-control"/>
+    </div>
+    <div class="form-group">
+        <label for="password">密码</label>
+        <input type="text" id="password" class="form-control"/>
+    </div>
+    <div class="form-group">
+        <label for="repassword">重复密码</label>
+        <input type="text" id="repassword" class="form-control"/>
+    </div>
+    <div class="form-group">
+        <label for="email">邮箱</label>
+        <input type="email" id="email" class="form-control"/>
+    </div>
+    <input class="btn btn-primary" type="submit" value="注册">
+</form>
 <%include ../include/footer.html%>

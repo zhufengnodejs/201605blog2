@@ -3,7 +3,12 @@ var express = require('express');
 var path = require('path');//处理文件路径的 join resolve
 var favicon = require('serve-favicon');//处理收藏夹图标
 var logger = require('morgan');//是一个请求日志打印工具
-var cookieParser = require('cookie-parser');//处理cookie  增加 req.cookies属性
+var cookieParser = require('cookie-parser');//处理cookie
+//引入session中间件
+var session = require('express-session');
+//把session放在数据库mongodb中
+var MongoStore = require('connect-mongo')(session);
+// 增加 req.cookies属性
 var bodyParser = require('body-parser');//处理请求体
 
 var routes = require('./routes/index');
@@ -27,6 +32,16 @@ app.use(bodyParser.json());//处理json格式请求体 {name:'zfpx'}
 //如果content-type=application/x-www-form-urlencoded  req.body=querystring.parse(请求体)
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());//处理cookie 得到 req.cookies
+var settings = require('./settings');
+//当使用了session中间件之后，会在req.session,在不同的请求之间可以共享
+app.use(session({
+  secret:'zfpx',//指定要加密cookie的密钥
+  resave:true,//每次请求都要重新保存session
+  saveUninitialized:true,//保存未初始化的session
+  store:new MongoStore({ //指定session存储位置
+    url:settings.dbUrl //指定了session的存储位置
+  })
+}));
 //静态文件中间件 根目录是public目录,所以在页面中引用静态文件的时候必须以public目录作为根目录
 app.use(express.static(path.join(__dirname, 'public')));
 
