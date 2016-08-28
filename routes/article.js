@@ -26,11 +26,11 @@ router.get('/list', auth.mustLogin, function (req, res) {
         query["$or"] = [{title: filter}, {content: filter}];
     }
     //默认情况下按文章的发表顺序倒序排列
-    var defaultOrder = {createAt:-1};
-    if(order){ // createAt -createAt title -title
+    var defaultOrder = {createAt: -1};
+    if (order) { // createAt -createAt title -title
         var orderValue = 1;//默认排序顺序 1
         var orderBy = 'createAt';
-        if(order.startsWith('-')){//表示倒序排列
+        if (order.startsWith('-')) {//表示倒序排列
             orderValue = -1;//表示要倒序
             orderBy = order.slice(1);//去掉-之后就成为真正排序字段名称了
         }
@@ -61,10 +61,10 @@ router.get('/list', auth.mustLogin, function (req, res) {
             keyword: keyword,//关键字
             pageNum: pageNum,//当前页
             pageSize: pageSize,//每页多少条
-            order:order,
+            order: order,
             totalPages: Math.ceil(count / pageSize) //总页数
         });
-    }).catch(function(err){
+    }).catch(function (err) {
         req.flash('error', '显示文章列表失败' + err);
         res.redirect('back');
     });
@@ -117,9 +117,13 @@ router.post('/add', auth.mustLogin, function (req, res) {
 router.get('/detail/:articleId', function (req, res) {
     var articleId = req.params.articleId;
     //find findById findOne等等都返回一个promise对象
-    Model('Article').findById(articleId).populate('comments.user').then(function (doc) {
-        res.render('article/detail', {title: '文章详情', article: doc});
-    }).catch(function (err) {
+    Model('Article').update({_id: articleId}, {$inc: {pv: 1}}).then(function () {
+        //返回一个新的promise,用于获取文章的对象，并且评论的用户从ID转成对角
+            return Model('Article').findById(articleId).populate('comments.user');
+        })
+        .then(function (doc) {
+            res.render('article/detail', {title: '文章详情', article: doc});
+        }).catch(function (err) {
         req.flash('error', '查询文章详情失败');
         req.redirect('back');
     });
@@ -151,18 +155,20 @@ router.get('/update/:articleId', function (req, res) {
     })
 });
 //提交评论
-router.post('/comment',function(req,res){
+router.post('/comment', function (req, res) {
     var comment = req.body;// articleId(文章的ID) content(评论的内容)
-    Model('Article').update({_id:comment.articleId},
+    Model('Article').update({_id: comment.articleId},
         {
-            $push:{comments:{
-                content:comment.content,
-                user:req.session.user._id,
-            }}
+            $push: {
+                comments: {
+                    content: comment.content,
+                    user: req.session.user._id,
+                }
+            }
         }
-    ).then(function(result){
-        res.redirect('/article/detail/'+comment.articleId);
-    },function(){
+    ).then(function (result) {
+        res.redirect('/article/detail/' + comment.articleId);
+    }, function () {
         res.redirect('back');
     });
 

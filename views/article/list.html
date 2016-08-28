@@ -11,7 +11,8 @@
                 <a href="/article/detail/<%=article._id%>"><%=article.title%></a>
             </h4>
             <p><%-article.content%></p>
-            <p>作者:<%=article.user.username%> | 发表时间:<%=article.createAt.toLocaleString()%></p>
+            <p>作者:<%=article.user.username%> | 发表时间:<%=article.createAt.toLocaleString()%>|pv:<%=article.pv%>|评论数:<%=article.comments.length%>
+            </p>
         </div>
     </div>
 <%});%>

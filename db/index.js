@@ -21,6 +21,7 @@ var UserModel = mongoose.model('User',UserSchema);
 var ArticleSchema = new mongoose.Schema({
     title: String,  //标题
     content: String, //正文
+    pv:{type:Number,default:0},//浏览量，每当点击进入详情页一次就加1
     //增加评论字段是一个数组，里面放的是对象
     comments:[{user:{type:ObjectId,ref:'User'},
         createAt:{type:Date,default:Date.now()},content:String}],
