@@ -112,11 +112,11 @@ router.post('/add', auth.mustLogin, function (req, res) {
     }
 
 });
-
+//获得文章的详情
 router.get('/detail/:articleId', function (req, res) {
     var articleId = req.params.articleId;
     //find findById findOne等等都返回一个promise对象
-    Model('Article').findById(articleId).then(function (doc) {
+    Model('Article').findById(articleId).populate('comments.user').then(function (doc) {
         res.render('article/detail', {title: '文章详情', article: doc});
     }).catch(function (err) {
         req.flash('error', '查询文章详情失败');
@@ -148,6 +148,23 @@ router.get('/update/:articleId', function (req, res) {
         //渲染模板，并传递当前的文章对象
         res.render('article/add', {title: '编辑文章', article: doc});
     })
+});
+//提交评论
+router.post('/comment',function(req,res){
+    var comment = req.body;// articleId(文章的ID) content(评论的内容)
+    Model('Article').update({_id:comment.articleId},
+        {
+            $push:{comments:{
+                content:comment.content,
+                user:req.session.user._id,
+            }}
+        }
+    ).then(function(result){
+        res.redirect('/article/detail/'+comment.articleId);
+    },function(){
+        res.redirect('back');
+    });
+
 });
 
 module.exports = router;

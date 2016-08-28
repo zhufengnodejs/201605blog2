@@ -21,6 +21,9 @@ var UserModel = mongoose.model('User',UserSchema);
 var ArticleSchema = new mongoose.Schema({
     title: String,  //标题
     content: String, //正文
+    //增加评论字段是一个数组，里面放的是对象
+    comments:[{user:{type:ObjectId,ref:'User'},
+        createAt:{type:Date,default:Date.now()},content:String}],
     user: {type: ObjectId, ref: 'User'}, //发表文章的用户
     createAt: {type: Date, default: Date.now()}//创建时间
 });

@@ -11,4 +11,44 @@
         <a href="/article/delete/<%=article._id%>" class="btn btn-danger">删除</a>
     </div>
 </div>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h5>评论列表</h5>
+    </div>
+    <div class="panel-body">
+        <%
+          //迭代文章的评论数组
+          article.comments.forEach(function(comment){%>
+            <div class="media">
+                <div class="media-left">
+                    <a href="#">
+                        <img class="media-object" src="<%=comment.user.avatar%>">
+                    </a>
+                </div>
+                <div class="media-body">
+                    <p><%-comment.content%></p>
+                    <p>作者:<%=comment.user.username%>|发表时间:<%=comment.createAt.toLocaleString()%></p>
+                </div>
+            </div>
+          <%});
+        %>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h5>增加评论</h5>
+    </div>
+    <div class="panel-body">
+        <form action="/article/comment" method="post">
+            <input type="hidden" name="articleId" value="<%=article._id%>">
+            <div class="form-group">
+                <textarea class="form-control" name="content" id="content" cols="30" rows="10"></textarea>
+            </div>
+            <input class="btn btn-primary" type="submit" value="发表评论">
+        </form>
+    </div>
+</div>
 <%include ../include/footer.html%>
