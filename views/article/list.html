@@ -15,5 +15,24 @@
         </div>
     </div>
 <%});%>
+<nav>
+    <ul class="pagination">
+        <li>
+            <a href="#" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        <%
+          for(var i=1;i<=totalPages;i++){%>
+              <li class="<%=pageNum==i?'active':''%>"><a href="/article/list?pageNum=<%=i%>&pageSize=<%=pageSize%>"><%=i%></a></li>
+        <%}
+        %>
 
+        <li>
+            <a href="#" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>
 <%include ../include/footer.html%>

@@ -9,29 +9,52 @@ router.get('/list', auth.mustLogin, function (req, res) {
     var keyword = req.query.keyword;//取得查询字关键字
     //读取所有的列表并显示在页面中
     var query = {};//查询条件对象
+    /**
+     * 要实现分页 需要让客户端知道 当前是第几页，每页多少条,一共多少页
+     *
+     */
+    var pageNum = parseInt(req.query.pageNum || 1); //当前的页码
+    var pageSize = parseInt(req.query.pageSize || 3);//每页的条数
+
     //如果有用户ID的话查询此用户的所有的文章
     if (user)
         query['user'] = user;
     //如果用户输入的关键字的话，那么查询标题和正文中包含此关键字的文章
-    if(keyword){
+    if (keyword) {
         var filter = new RegExp(keyword);//先写正则
         //或条件，如果title符合正则或者 内容符合正则
-        query["$or"] = [{title: filter, content: filter}];
+        query["$or"] = [{title: filter}, {content: filter}];
     }
-    Model('Article').find(query).populate('user').exec(function (err, docs) {
-        if (err) {
-            req.flash('error', '显示文章列表失败' + err);
-            res.redirect('back');
-        } else {
-            //把markdown源文件转换成html格式的内容
-            docs.forEach(function (doc) {
-                doc.content = markdown.toHTML(doc.content);
-            });
-            //docs是所有的文章数组
-            res.render('article/list', {title: '文章列表', articles: docs,keyword:keyword});
-        }
-
+    var count;
+    Model('Article')
+        .count(query)
+        .then(function (result) {//得到符合这个条件的总条数
+            count = result;
+            return Model('Article')
+                .find(query)//按指定的条件过滤
+                .skip((pageNum - 1) * pageSize) //跳过指定的条数
+                .limit(pageSize)//限定返回的条数
+                .populate('user')//把user属性从ID转成对象
+                .exec();//开始真正执行查询，返回一个新promise
+        }).then(function (docs) {//docs是当前页的文章列表
+        //把markdown源文件转换成html格式的内容
+        docs.forEach(function (doc) {
+            doc.content = markdown.toHTML(doc.content);
+        });
+        //docs是所有的文章数组
+        res.render('article/list', {
+            title: '文章列表',
+            articles: docs,//当前页的文章列表
+            keyword: keyword,//关键字
+            pageNum: pageNum,//当前页
+            pageSize: pageSize,//每页多少条
+            totalPages: Math.ceil(count / pageSize) //总页数
+        });
+    }).catch(function(err){
+        req.flash('error', '显示文章列表失败' + err);
+        res.redirect('back');
     });
+
 });
 
 //显示增加文章的表单路由

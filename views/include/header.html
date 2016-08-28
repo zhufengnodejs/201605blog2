@@ -24,7 +24,7 @@
                   <li><a href="/user/login">登录</a></li>
                 <%}%>
             </ul>
-            <form action="/article/list?keyword=<%=keyword%>" class="navbar-form navbar-left" role="search">
+            <form action="/article/list?pageNum=1&pageSize=3" class="navbar-form navbar-left" role="search">
                 <div class="form-group">
                     <input name="keyword" type="text" class="form-control" value="<%=keyword%>" placeholder="请输入搜索关键字">
                 </div>
