@@ -55,7 +55,7 @@
 
         <%
           for(var i=1;i<=totalPages;i++){%>
-              <li class="<%=pageNum==i?'active':''%>"><a href="#"  onchange="goto(<%=i%>)"><%=i%></a></li>
+              <li class="<%=pageNum==i?'active':''%>"><a href="#"  onclick="goto(<%=i%>)"><%=i%></a></li>
         <%}
         %>
         <%

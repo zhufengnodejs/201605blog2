@@ -29,11 +29,12 @@ router.get('/list', auth.mustLogin, function (req, res) {
     var defaultOrder = {createAt:-1};
     if(order){ // createAt -createAt title -title
         var orderValue = 1;//默认排序顺序 1
+        var orderBy = 'createAt';
         if(order.startsWith('-')){//表示倒序排列
             orderValue = -1;//表示要倒序
-            order = order.slice(1);//去掉-之后就成为真正排序字段名称了
+            orderBy = order.slice(1);//去掉-之后就成为真正排序字段名称了
         }
-        defaultOrder[order] = orderValue;
+        defaultOrder[orderBy] = orderValue;
     }
     console.log(defaultOrder);
     var count;
@@ -144,7 +145,7 @@ router.get('/update/:articleId', function (req, res) {
     //先得到要编辑的文章ID
     var articleId = req.params.articleId;
     //根据文章的ID查询文章的文档对象
-    Model('Article').findById(articleId).then(function (doc) {
+    Model('Article').findById(articleId).populate('comments.user').then(function (doc) {
         //渲染模板，并传递当前的文章对象
         res.render('article/add', {title: '编辑文章', article: doc});
     })
