@@ -168,7 +168,7 @@ router.post('/comment', function (req, res) {
         }
     ).then(function (result) {
         res.redirect('/article/detail/' + comment.articleId);
-    }, function () {
+    }, function (error) {
         res.redirect('back');
     });
 
