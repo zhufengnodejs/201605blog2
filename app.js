@@ -27,9 +27,9 @@ app.engine('html',require('ejs').__express);//设置渲染函数
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 var fs = require('fs');
 //创建一个可写流
-var accessStream = fs.createWriteStream('../access.log');
+//var accessStream = fs.createWriteStream('../access.log');
 //如果指定了stream,可以把日志打印到可写流里面
-app.use(logger('dev',{stream:accessStream}));//使用请求日志中间件
+app.use(logger('dev'));//使用请求日志中间件
 //通过判断请求头中的content-type来得到请求体的内容类型
 //如果是content-type=application/json req.body=JSON.parse(请求体)
 app.use(bodyParser.json());//处理json格式请求体 {name:'zfpx'}
@@ -81,13 +81,13 @@ app.use(function(req, res, next) {
 });
 
 // error handlers
-var errorStream = fs.createWriteStream('./error.log');
+//var errorStream = fs.createWriteStream('./error.log');
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
     console.error(err);//把错误输出到控制台
-    errorStream.write(err.toString());
+    //errorStream.write(err.toString());
     res.status(err.status || 500);
     res.render('error', {
       message: err.message,
