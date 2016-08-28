@@ -58,5 +58,17 @@ router.get('/detail/:articleId',function(req,res){
       req.redirect('back');
   });
 });
-
+//删除文章
+router.get('/delete/:articleId',function(req,res){
+  //先得到要删除的文章ID
+  var articleId = req.params.articleId;
+  //删除指定的文章
+  Model('Article').remove({_id:articleId}).then(function(data){
+      req.flash('success','删除文章成功');
+      req.redirect('/');
+  }).catch(function(error){
+      req.flash('error','删除文章失败');
+      req.redirect('back');
+  });
+});
 module.exports = router;
