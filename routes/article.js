@@ -15,7 +15,7 @@ router.get('/list', auth.mustLogin, function (req, res) {
      */
     var pageNum = parseInt(req.query.pageNum || 1); //当前的页码
     var pageSize = parseInt(req.query.pageSize || 3);//每页的条数
-
+    var order = req.query.order;
     //如果有用户ID的话查询此用户的所有的文章
     if (user)
         query['user'] = user;
@@ -25,6 +25,17 @@ router.get('/list', auth.mustLogin, function (req, res) {
         //或条件，如果title符合正则或者 内容符合正则
         query["$or"] = [{title: filter}, {content: filter}];
     }
+    //默认情况下按文章的发表顺序倒序排列
+    var defaultOrder = {createAt:-1};
+    if(order){ // createAt -createAt title -title
+        var orderValue = 1;//默认排序顺序 1
+        if(order.startsWith('-')){//表示倒序排列
+            orderValue = -1;//表示要倒序
+            order = order.slice(1);//去掉-之后就成为真正排序字段名称了
+        }
+        defaultOrder[order] = orderValue;
+    }
+    console.log(defaultOrder);
     var count;
     Model('Article')
         .count(query)
@@ -32,6 +43,7 @@ router.get('/list', auth.mustLogin, function (req, res) {
             count = result;
             return Model('Article')
                 .find(query)//按指定的条件过滤
+                .sort(defaultOrder)
                 .skip((pageNum - 1) * pageSize) //跳过指定的条数
                 .limit(pageSize)//限定返回的条数
                 .populate('user')//把user属性从ID转成对象
@@ -48,6 +60,7 @@ router.get('/list', auth.mustLogin, function (req, res) {
             keyword: keyword,//关键字
             pageNum: pageNum,//当前页
             pageSize: pageSize,//每页多少条
+            order:order,
             totalPages: Math.ceil(count / pageSize) //总页数
         });
     }).catch(function(err){
