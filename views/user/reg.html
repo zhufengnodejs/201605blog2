@@ -1,5 +1,5 @@
 <%include ../include/header.html%>
-<form action="/user/reg" method="post" class="form-horizontal">
+<form enctype="multipart/form-data" action="/user/reg" method="post" class="form-horizontal">
     <div class="form-group">
         <label class="control-label col-xs-3" for="username">用户名</label>
 
@@ -30,6 +30,13 @@
         <div class="col-xs-6 input-group">
             <div class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></div>
             <input type="email" name="email" id="email" class="form-control"/>
+        </div>
+    </div>
+    <div>
+        <label class="control-label col-xs-3" for="avatar">头像</label>
+
+        <div class="col-xs-6">
+            <input type="file" id="avatar" class="form-control" name="avatar">
         </div>
     </div>
     <div class="col-xs-offset-3">

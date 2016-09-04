@@ -1,6 +1,8 @@
 var express = require('express');
 var utils = require('../utils');
 var auth = require('../middleware/auth');
+var multer = require('multer');
+var upload = multer({ dest: '../public/uploads/' })
 //创建一个路由容器
 var router = express.Router();
 //用户注册
@@ -9,7 +11,8 @@ router.get('/reg',auth.mustNotLogin,function(req, res, next) {
   res.render('user/reg');
 });
 //提交用户注册表单
-router.post('/reg',auth.mustNotLogin, function(req, res, next) {
+router.post('/reg',auth.mustNotLogin,upload.single('avatar'), function(req, res, next) {
+
   var user = req.body;//user password repassword email
   //如果密码和重复密码不一致，则返回重定向到上一个注册表单页面
   if(user.password != user.repassword){
@@ -23,8 +26,12 @@ router.post('/reg',auth.mustNotLogin, function(req, res, next) {
     }else{
       //1. 对密码进行md5加密
       user.password = utils.md5(user.password);
-      //2. 通过邮箱生成头像
-      user.avatar = "https://secure.gravatar.com/avatar/"+utils.md5(user.email)+"?s=28";
+      if(req.file){
+        user.avatar = '/uploads/'+req.file.filename;
+      }
+
+        //2. 通过邮箱生成头像
+      /*user.avatar = "https://secure.gravatar.com/avatar/"+utils.md5(user.email)+"?s=28";*/
       //通过User可以得到模型对象
       Model('User').create(user,function(err,doc){
         //err 错误对象 doc 是保存成功后的对象

@@ -25,7 +25,7 @@ app.engine('html',require('ejs').__express);//设置渲染函数
 // uncomment after placing your favicon in /public
 // 在你将收藏夹图标放置在/public目录下之后就可以取消掉此注释了
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-var fs = require('fs');
+//var fs = require('fs');
 //创建一个可写流
 //var accessStream = fs.createWriteStream('../access.log');
 //如果指定了stream,可以把日志打印到可写流里面
